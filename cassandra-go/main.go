@@ -8,7 +8,7 @@ import (
 )
 
 func PerformOperations() {
-	cluster := gocql.NewCluster("127.0.0.1:29041", "127.0.0.1:29042", "127.0.0.1:29043")
+	cluster := gocql.NewCluster("172.17.0.4")
 
 	cluster.Authenticator = gocql.PasswordAuthenticator{
 		Username: "some_username",
