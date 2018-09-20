@@ -6,6 +6,7 @@ import (
 	pb "github.com/mlvhub/learning-go/microservices-tutorial/consignment-service/proto/consignment"
 	vesselProto "github.com/mlvhub/learning-go/microservices-tutorial/vessel-service/proto/vessel"
 	"golang.org/x/net/context"
+	"gopkg.in/mgo.v2"
 )
 
 // Service should implement all of the methods to satisfy the service
@@ -13,6 +14,7 @@ import (
 // in the generated code itself for the exact method signatures etc
 // to give you a better idea.
 type handler struct {
+	session      *mgo.Session
 	vesselClient vesselProto.VesselServiceClient
 }
 

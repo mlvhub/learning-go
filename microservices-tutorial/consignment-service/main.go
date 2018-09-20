@@ -53,7 +53,7 @@ func main() {
 	srv.Init()
 
 	// Register handler
-	pb.RegisterShippingServiceHandler(srv.Server(), &service{session, vesselClient})
+	pb.RegisterShippingServiceHandler(srv.Server(), &handler{session, vesselClient})
 
 	// Run the server
 	if err := srv.Run(); err != nil {

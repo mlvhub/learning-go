@@ -2,6 +2,7 @@ package main
 
 import (
 	pb "github.com/mlvhub/learning-go/microservices-tutorial/consignment-service/proto/consignment"
+	"gopkg.in/mgo.v2"
 )
 
 const (
