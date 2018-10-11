@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"encoding/gob"
 
-	"github.com/learning-go/mlvhub/meower/schema"
+	"github.com/mlvhub/learning-go/meower/schema"
+	nats "github.com/nats-io/go-nats"
 )
 
 type NatsEventStore struct {
@@ -40,6 +41,28 @@ func (e *NatsEventStore) PublishMeowCreated(meow schema.Meow) error {
 	return e.nc.Publish(m.Key(), data)
 }
 
+func (e *NatsEventStore) SubscribeMeowCreated() (<-chan MeowCreatedMessage, error) {
+	m := MeowCreatedMessage{}
+	e.meowCreatedChan = make(chan MeowCreatedMessage, 64)
+	ch := make(chan *nats.Msg, 64)
+	var err error
+	e.meowCreatedSubscription, err = e.nc.ChanSubscribe(m.Key(), ch)
+	if err != nil {
+		return nil, err
+	}
+	// Decode message
+	go func() {
+		for {
+			select {
+			case msg := <-ch:
+				e.readMessage(msg.Data, &m)
+				e.meowCreatedChan <- m
+			}
+		}
+	}()
+	return (<-chan MeowCreatedMessage)(e.meowCreatedChan), nil
+}
+
 func (mq *NatsEventStore) writeMessage(m Message) ([]byte, error) {
 	b := bytes.Buffer{}
 	err := gob.NewEncoder(&b).Encode(m)
@@ -47,4 +70,19 @@ func (mq *NatsEventStore) writeMessage(m Message) ([]byte, error) {
 		return nil, err
 	}
 	return b.Bytes(), nil
+}
+
+func (mq *NatsEventStore) readMessage(data []byte, m interface{}) error {
+	b := bytes.Buffer{}
+	b.Write(data)
+	return gob.NewDecoder(&b).Decode(m)
+}
+
+func (e *NatsEventStore) OnMeowCreated(f func(MeowCreatedMessage)) (err error) {
+	m := MeowCreatedMessage{}
+	e.meowCreatedSubscription, err = e.nc.Subscribe(m.Key(), func(msg *nats.Msg) {
+		e.readMessage(msg.Data, &m)
+		f(m)
+	})
+	return
 }

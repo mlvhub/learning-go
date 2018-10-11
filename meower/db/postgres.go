@@ -4,8 +4,8 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/learning-go/mlvhub/meower/schema"
 	_ "github.com/lib/pq"
+	"github.com/mlvhub/learning-go/meower/schema"
 )
 
 type PostgresRepository struct {

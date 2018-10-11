@@ -1,7 +1,7 @@
 package event
 
 import (
-	"github.com/learning-go/mlvhub/meower/schema"
+	"github.com/mlvhub/learning-go/meower/schema"
 )
 
 type EventStore interface {
