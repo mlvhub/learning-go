@@ -3,6 +3,7 @@ package mongo
 import (
 	"github.com/globalsign/mgo"
 	"github.com/globalsign/mgo/bson"
+	"github.com/mlvhub/learning-go/mongodb-rest-api/pkg"
 )
 
 type userModel struct {
@@ -29,7 +30,7 @@ func newUserModel(u *root.User) *userModel {
 
 func (u *userModel) toRootUser() *root.User {
 	return &root.User{
-		Id:       u.Id.Hex(),
+		ID:       u.ID.Hex(),
 		Username: u.Username,
 		Password: u.Password}
 }

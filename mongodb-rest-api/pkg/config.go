@@ -1,8 +1,9 @@
 package root
 
 type MongoConfig struct {
-	IP     string `json:"ip"`
-	DBName string `json:"dbName"`
+	URL       string `json:"url"`
+	DBName    string `json:"dbName"`
+	UserTable string `json:"userTable"`
 }
 
 type ServerConfig struct {
